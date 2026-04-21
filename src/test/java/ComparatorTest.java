@@ -16,7 +16,7 @@ public class ComparatorTest {
     }
     @Test
     void negativeTest () {
-        // проверка противоположного условия (а > b )
+        // проверка противоположного условия (а > b)
         assertTrue(Comparator.compare(10, 1)>0);
     }
 }
