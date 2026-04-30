@@ -126,7 +126,9 @@ public class MTSTest {
 
         driver.switchTo().frame(paymentFrame);
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//iframe")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//iframe")));
+
+        Assertions.assertTrue(driver.getPageSource().contains("card"));
     }
 }
 
