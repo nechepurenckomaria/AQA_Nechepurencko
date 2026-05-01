@@ -19,6 +19,7 @@ public class MtsPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
     }
+
     private By cookieBtn = By.xpath("//button[contains(text(),'Принять')]");
     private By title = By.xpath("//h2[contains(., 'Онлайн пополнение') and contains(., 'без комиссии')]");
 
@@ -30,7 +31,7 @@ public class MtsPage {
 
     private By detailsLink = By.linkText("Подробнее о сервисе");
 
-    private By phoneInput = By.xpath("//input[@id='connection-phone-1']");
+    private By phoneInput = By.xpath("//input[@id='connection-phone']");
     private By amountInput = By.xpath("//input[@id='connection-sum']");
     private By emailInput = By.xpath("//input[@id='connection-email']");
     private By continueBtn = By.xpath("//button[contains(., 'Продолжить')]");
@@ -73,13 +74,13 @@ public class MtsPage {
     public MtsPage fillForm(String phone, String amount, String email) {
 
         WebElement phoneField = wait.until(
-                ExpectedConditions.presenceOfElementLocated(phoneInput)
+                ExpectedConditions.visibilityOfElementLocated(phoneInput)
         );
 
         ((JavascriptExecutor) driver)
                 .executeScript("arguments[0].scrollIntoView(true);", phoneField);
 
-        wait.until(ExpectedConditions.elementToBeClickable(phoneField)).sendKeys(phone);
+        phoneField.sendKeys(phone);
 
         driver.findElement(amountInput).sendKeys(amount);
         driver.findElement(emailInput).sendKeys(email);
@@ -94,6 +95,11 @@ public class MtsPage {
 
     public MtsPage switchToPaymentFrame() {
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
+        return this;
+    }
+
+    public MtsPage checkPaymentForm() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@type = 'tel']")));
         return this;
     }
 }
