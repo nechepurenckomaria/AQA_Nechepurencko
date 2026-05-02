@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.Driver;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
@@ -38,11 +39,46 @@ class MtsTest {
                 .acceptCookies()
                 .checkTitle()
                 .checkLogos()
-                .fillForm("297777777", "50", "test@mail.ru")
+                .fillForm("297777777", "50", "nmr@mail.ru")
                 .clickContinue()
                 .switchToPaymentFrame()
-        .checkPaymentForm();
+                .checkAmount("50.00 BYN")
+                .checkPhone("375297777777")
+                .checkPlaceholdersCard()
+                .checkPayButton("50.00");
 
 
     }
-}
+    @Test
+    void checkMobilePlaceholders () {
+        MtsPage page = new MtsPage(driver);
+        page.open()
+                .acceptCookies()
+                .selectService("Услуги связи")
+                .checkPlaceholdersForMobile();
+    }
+    @Test
+    void checkInternetPlaceholders () {
+        MtsPage page = new MtsPage(driver);
+        page.open()
+                .acceptCookies()
+                .selectService("Домашний интернет")
+                .checkPlaceholdersForInternet();
+    }
+    @Test
+    void checkInstallmentPlaceholders() {
+        MtsPage page = new MtsPage(driver);
+        page.open()
+                .acceptCookies()
+                .selectService("Рассрочка")
+                .checkPlaceholdersForInstallment();
+    }
+    @Test
+    void checkDebtPlaceholders() {
+        MtsPage page = new MtsPage(driver);
+        page.open()
+                .acceptCookies()
+                .selectService("Задолженность")
+                .checkPlaceholdersForDebt();
+    }
+    }

@@ -7,7 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MtsPage {
 
@@ -37,6 +41,20 @@ public class MtsPage {
     private By continueBtn = By.xpath("//button[contains(., 'Продолжить')]");
 
     private By iframe = By.xpath("//iframe");
+
+    private By serviceDropdown = By.xpath("//button[contains(@class, 'select__header')]");
+    private By InternetPhoneInput = By.xpath("//input[contains(@placeholder, 'Номер абонента')]");
+    private By installmentInput = By.xpath("//input[contains(@placeholder, 'Номер счета')]");
+    private By debtInput = By.xpath("//input[contains(@placeholder, 'Номер счета на 2073')]");
+
+    private By amountText = By.xpath("//span[contains(text(), 'BYN')]");
+    private By phoneText = By.xpath("//span[contains(text(), 'Номер:')]");
+    private By cardNumber = By.xpath("//input[@formcontrolname = 'cc-number']");
+    private By expiry = By.xpath("//input[@formcontrolname = 'expDate']");
+    private By cvc = By.xpath("//input[@placeholder = 'cvc']");
+    private By cardName = By.xpath("//input[contains(@placeholder, 'Имя')]");
+
+    private By payButton = By.xpath("//button[contains(., 'Оплатить')]");
 
     public MtsPage open() {
         driver.get("https://mts.by");
@@ -94,12 +112,79 @@ public class MtsPage {
     }
 
     public MtsPage switchToPaymentFrame() {
-        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
+                By.xpath("//iframe[contains(@class,'payment-widget-iframe')]")));
+        return this;
+
+    }
+
+
+    public MtsPage selectService(String serviceName) {
+        WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(serviceDropdown));
+
+        dropdown.click();
+
+        By option = By.xpath(String.format("//li[contains(@class, 'select__item') and normalize-space()='%s']", serviceName));
+
+        wait.until(ExpectedConditions.elementToBeClickable(option)).click();
         return this;
     }
 
-    public MtsPage checkPaymentForm() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@type = 'tel']")));
+    public MtsPage checkPlaceholdersForMobile() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(phoneInput));
+        assertEquals("Номер телефона", driver.findElement(phoneInput).getAttribute("placeholder"));
+        assertEquals("Сумма", driver.findElement(amountInput).getAttribute("placeholder"));
+        assertEquals("E-mail для отправки чека", driver.findElement(emailInput).getAttribute("placeholder"));
+        return this;
+
+    }
+    public MtsPage checkPlaceholdersForInternet () {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(InternetPhoneInput));
+        assertEquals("Номер абонента", driver.findElement(InternetPhoneInput).getAttribute("placeholder"));
+        assertEquals("Сумма", driver.findElement(amountInput).getAttribute("placeholder"));
+        assertEquals("E-mail для отправки чека", driver.findElement(emailInput).getAttribute("placeholder"));
+        return this;
+    }
+    public MtsPage checkPlaceholdersForInstallment () {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(installmentInput));
+        assertTrue(
+                driver.findElement(installmentInput)
+                        .getAttribute("placeholder")
+                        .contains("Номер счета")
+        );
+        assertEquals("Сумма", driver.findElement(amountInput).getAttribute("placeholder"));
+        assertEquals("E-mail для отправки чека", driver.findElement(emailInput).getAttribute("placeholder"));
+        return this;
+    }
+    public MtsPage checkPlaceholdersForDebt () {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(debtInput));
+        assertTrue(
+                driver.findElement(debtInput)
+                        .getAttribute("placeholder")
+                        .contains("Номер счета")
+        );
+        assertEquals("Сумма", driver.findElement(amountInput).getAttribute("placeholder"));
+        assertEquals("E-mail для отправки чека", driver.findElement(emailInput).getAttribute("placeholder"));
+        return this;
+    }
+    public MtsPage checkAmount (String amount) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(amountText));
+        assertTrue(driver.findElement(amountText).getText().contains(amount));
+        return  this;
+    }
+    public MtsPage checkPhone (String phone) {
+        assertTrue(driver.findElement(phoneText).getText().contains(phone));
+        return this;
+    }
+    public MtsPage checkPlaceholdersCard () {
+        assertEquals("Номер карты", driver.findElement(cardNumber).getAttribute("placeholder"));
+        assertEquals("Срок действия", driver.findElement(expiry).getAttribute("placeholder"));
+        assertEquals("CVC", driver.findElement(cvc).getAttribute("placeholder"));
+        assertTrue(driver.findElement(cardName).getAttribute("placeholder").contains("Имя"));
+        return this;
+    }
+    public MtsPage checkPayButton (String amount) {
+        assertTrue(driver.findElement(payButton).getText().contains(amount));
         return this;
     }
 }
