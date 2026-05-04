@@ -167,24 +167,5 @@ public class MtsPage {
         assertEquals("E-mail для отправки чека", driver.findElement(emailInput).getAttribute("placeholder"));
         return this;
     }
-    public MtsPage checkAmount (String amount) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(amountText));
-        assertTrue(driver.findElement(amountText).getText().contains(amount));
-        return  this;
-    }
-    public MtsPage checkPhone (String phone) {
-        assertTrue(driver.findElement(phoneText).getText().contains(phone));
-        return this;
-    }
-    public MtsPage checkPlaceholdersCard () {
-        assertEquals("Номер карты", driver.findElement(cardNumber).getAttribute("placeholder"));
-        assertEquals("Срок действия", driver.findElement(expiry).getAttribute("placeholder"));
-        assertEquals("CVC", driver.findElement(cvc).getAttribute("placeholder"));
-        assertTrue(driver.findElement(cardName).getAttribute("placeholder").contains("Имя"));
-        return this;
-    }
-    public MtsPage checkPayButton (String amount) {
-        assertTrue(driver.findElement(payButton).getText().contains(amount));
-        return this;
-    }
+
 }

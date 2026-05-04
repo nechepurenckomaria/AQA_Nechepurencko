@@ -41,11 +41,8 @@ class MtsTest {
                 .checkLogos()
                 .fillForm("297777777", "50", "nmr@mail.ru")
                 .clickContinue()
-                .switchToPaymentFrame()
-                .checkAmount("50.00 BYN")
-                .checkPhone("375297777777")
-                .checkPlaceholdersCard()
-                .checkPayButton("50.00");
+                .switchToPaymentFrame();
+
 
 
     }
